@@ -15,13 +15,13 @@ NSS_LIBDIR = $(shell \
     if [ -e /usr/lib64/libnss3.so ] ; then \
         printf '%s' "/usr/lib64/libnss3.so" ; \
     else \
-        printf '%s\n' /usr/lib64/*/libnss3.so | head -n 1 ; \
+        dirname /usr/lib/*linux*/libnss3.so | head -n 1 ; \
     fi \
   else \
     if [ -e /usr/lib/libnss3.so ] ; then \
         printf '%s' "/usr/lib/libnss3.so" ; \
     else \
-        printf '%s\n' /usr/lib/*/libnss3.so | head -n 1 ; \
+        dirname /usr/lib/*linux*/libnss3.so | head -n 1 ; \
     fi \
   fi \
 )
@@ -88,6 +88,7 @@ JAVA_SECURITY_PARAMS := $(shell \
         printf '%s ' -Djavax.net.ssl.trustStorePassword=$(TRUSTSTORE_PASSWORD) ; \
     elif [ 1 = "$(TEST_PKCS11_FIPS)" ] ; then \
         printf '%s ' -Djava.security.properties==$(JAVA_PKCS11_FIPS_SECURITY_CFG) ; \
+        printf '%s ' -Djdk.tls.ephemeralDHKeySize=2048 ; \
         if cat "$(JAVA_CONF_DIR)/security/java.security" 2>&1 | grep -q '^fips.provider' && [ 1 = $(FIPS_MODE_ENABLED) ] ; then \
             printf '%s ' '-Dcom.redhat.fips=true' ; \
         else \
