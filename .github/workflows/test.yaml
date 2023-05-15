@@ -314,7 +314,7 @@ jobs:
         run: make SSLContextInfo SSLSocketInfo ssl-tests
   test-linux-jtreg:
     name: "Linux Jtreg"
-    runs-on: "ubuntu-latest"
+    runs-on: "windows-latest"
     strategy:
       fail-fast: false
       matrix:
@@ -346,5 +346,43 @@ jobs:
           wget https://ci.adoptopenjdk.net/view/Dependencies/job/dependency_pipeline/lastSuccessfulBuild/artifact/jtreg/jtreg5.1-b01.tar.gz
           tar -xf jtreg5.1-b01.tar.gz
       - name: Run
+        run: |
+          jtreg/bin/jtreg -jdk:$JAVA_HOME -v:fail,error,summary -retain:fail,error -ignore:quiet -xml -conc:2 jtreg-wrappers
+  test-windows-jtreg:
+    name: "Windows Jtreg"
+    runs-on: "windows-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+        jdkconf:
+          - JDK 8
+          - JDK 11
+          - JDK 17
+          - JDK Latest
+        include:
+          - jdkconf: JDK 8
+            jdkver: "8"
+          - jdkconf: JDK 11
+            jdkver: "11"
+          - jdkconf: JDK 17
+            jdkver: "17"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.jdkver || env.jdkver_latest }}
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: make curl openssl wget tar
+      - name: Download jtreg
+        shell: msys2 {0}
+        run: |
+          wget https://ci.adoptopenjdk.net/view/Dependencies/job/dependency_pipeline/lastSuccessfulBuild/artifact/jtreg/jtreg5.1-b01.tar.gz
+          tar -xf jtreg5.1-b01.tar.gz
+      - name: Run
+        shell: msys2 {0}
         run: |
           jtreg/bin/jtreg -jdk:$JAVA_HOME -v:fail,error,summary -retain:fail,error -ignore:quiet -xml -conc:2 jtreg-wrappers
