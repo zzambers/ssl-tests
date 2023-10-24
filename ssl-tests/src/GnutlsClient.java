@@ -116,6 +116,9 @@ public class GnutlsClient extends ExternalClient {
             if (line.length() == 0) {
                 break;
             }
+            if (line.startsWith("Certificate types")) {
+                break;
+            }
             components = line.split("\\s+");
             if (components.length < 4) {
                 break;
