@@ -311,7 +311,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.jdkver || env.jdkver_latest }}
       - name: Run
-        run: make SSLContextInfo SSLSocketInfo ssl-tests
+        run: make SSLContextInfo SSLSocketInfo ssl-tests TEST_BC_2ND=1
   test-linux-jtreg:
     name: "Linux Jtreg"
     runs-on: "ubuntu-latest"
