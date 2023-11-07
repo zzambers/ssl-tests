@@ -318,6 +318,7 @@ $(JAVA_BCJSSE_SECURITY_CFG): | $(JAVA_BCJSSE_CONF_DIR)
 # https://bugs.openjdk.java.net/browse/JDK-8256252
 $(JAVA_BC_2ND_SECURITY_CFG): | $(JAVA_BC_2ND_CONF_DIR)
 	cp $(JAVA_CONF_DIR)/security/java.security $@
+	cat $@
 	printf '\n' >> $@ ;
 	i=2 ; \
 	while cat $@ | grep -q "^security.provider.$${i}[[:space:]]*=" ; do \
@@ -337,5 +338,7 @@ $(JAVA_BC_2ND_SECURITY_CFG): | $(JAVA_BC_2ND_CONF_DIR)
 	    printf '%s\n' "$${providers}" | sed 's;^security.provider;fips.provider;g' \
 	    >> $@ ; \
 	fi
+	ls $(JAVA_BC_2ND_CONF_DIR)
+	cat $@
 
 java-pkcs11-fips-conf: $(JAVA_PKCS11_FIPS_SECURITY_CFG)
