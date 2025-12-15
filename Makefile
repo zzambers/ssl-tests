@@ -66,7 +66,6 @@ CERTGEN_BUILD_DIR = $(BUILD_DIR)/certgen
 include $(CERTGEN_DIR)/certgen.mk
 
 # BCFIPS needs workaround for jdk>=13:
-# https://github.com/bcgit/bc-java/issues/589#issuecomment-530780788
 JAVA_SECURITY_PARAMS := $(shell \
     if [ 1 = "$(TEST_BCFIPS)" ] ; then \
         printf '%s ' -Djava.security.properties==$(JAVA_BCFIPS_SECURITY_CFG) ; \
@@ -75,9 +74,6 @@ JAVA_SECURITY_PARAMS := $(shell \
         printf '%s ' -Djavax.net.ssl.trustStore=$(TRUSTSTORE_P12) ; \
         printf '%s ' -Djavax.net.ssl.trustStorePassword=$(TRUSTSTORE_PASSWORD) ; \
         printf '%s ' -Dorg.bouncycastle.rsa.allow_multi_use=true ; \
-        if [ 13 -le $(JAVA_VERSION_MAJOR) ] ; then \
-            printf '%s ' '-Djdk.tls.namedGroups="secp256r1, secp384r1, ffdhe2048, ffdhe3072"' ; \
-        fi ; \
         if [ 1 = "$(JAVA_CONF_FIPS)" ] && [ 1 = "$(FIPS_MODE_ENABLED)" ] ; then \
             printf '%s ' '-Dcom.redhat.fips=0' ; \
         fi ; \
