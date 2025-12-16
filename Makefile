@@ -74,6 +74,7 @@ JAVA_SECURITY_PARAMS := $(shell \
         printf '%s ' -Djavax.net.ssl.trustStore=$(TRUSTSTORE_P12) ; \
         printf '%s ' -Djavax.net.ssl.trustStorePassword=$(TRUSTSTORE_PASSWORD) ; \
         printf '%s ' -Dorg.bouncycastle.rsa.allow_multi_use=true ; \
+        printf '%s ' -Dorg.bouncycastle.jsse.fips.allowRSAKeyExchange=true ; \
         if [ 1 = "$(JAVA_CONF_FIPS)" ] && [ 1 = "$(FIPS_MODE_ENABLED)" ] ; then \
             printf '%s ' '-Dcom.redhat.fips=0' ; \
         fi ; \
